@@ -47,6 +47,7 @@ API/
 | M12 Search (API + APP) | Complete |
 | M13 Audit Log (API + APP) | Complete |
 | M14 File Upload (API + APP) | Complete |
+<<<<<<< HEAD
 | Phase 7 CI/CD & Hardening | Complete |
 
 ## CI/CD
@@ -67,6 +68,9 @@ See [docs/deployment-runbook.md](docs/deployment-runbook.md) and [docs/modules/P
 |----------|-------------|
 | `GET /health` | Liveness |
 | `GET /health/ready` | Readiness (DB) |
+=======
+| Phase 7 CI/CD & Hardening | Next |
+>>>>>>> 5ed970fcd566293d374e05276975a5f2942764e7
 
 ## Quick Start
 
@@ -85,8 +89,11 @@ npm start
 
 - **Frontend:** http://localhost:4200  
 - **API:** http://localhost:5005  
+<<<<<<< HEAD
 - **Health:** http://localhost:5005/health  
 - **OpenAPI (dev):** http://localhost:5005/openapi/v1.json  
+=======
+>>>>>>> 5ed970fcd566293d374e05276975a5f2942764e7
 - **Admin:** `admin@jiratrack.com` / `Admin@123`
 
 ## API Endpoints (M01 Auth)
