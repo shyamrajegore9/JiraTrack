@@ -1,0 +1,20 @@
+<div
+  class="drop-zone"
+  [class.dragging]="dragging()"
+  [class.disabled]="disabled()"
+  (dragover)="onDragOver($event)"
+  (dragleave)="onDragLeave()"
+  (drop)="onDrop($event)">
+  <mat-icon>cloud_upload</mat-icon>
+  <p>Drag and drop a file here, or</p>
+  <button mat-stroked-button type="button" [disabled]="disabled()" (click)="fileInput.click()">
+    Browse files
+  </button>
+  <input
+    #fileInput
+    type="file"
+    hidden
+    [accept]="accept()"
+    [disabled]="disabled()"
+    (change)="onFileInput($event)" />
+</div>

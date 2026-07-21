@@ -1,0 +1,106 @@
+<div class="form-header">
+  <h1>{{ isEdit ? 'Edit Bug' : 'Report Bug' }}</h1>
+  <a mat-button routerLink="..">Cancel</a>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="submit()" class="bug-form">
+  <mat-form-field appearance="outline">
+    <mat-label>Title</mat-label>
+    <input matInput formControlName="title" />
+    @if (form.controls.title.touched && form.controls.title.invalid) {
+      <mat-error>Title is required</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Description</mat-label>
+    <textarea matInput formControlName="description" rows="3"></textarea>
+  </mat-form-field>
+
+  <div class="row">
+    @if (!isEdit) {
+      <mat-form-field appearance="outline">
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status">
+          @for (s of statuses; track s) {
+            <mat-option [value]="s">{{ statusLabels[s] }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    }
+    <mat-form-field appearance="outline">
+      <mat-label>Severity</mat-label>
+      <mat-select formControlName="severity">
+        @for (s of severities; track s) {
+          <mat-option [value]="s">{{ s }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Priority</mat-label>
+      <mat-select formControlName="priority">
+        @for (p of priorities; track p) {
+          <mat-option [value]="p">{{ p }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="row">
+    <mat-form-field appearance="outline">
+      <mat-label>Environment</mat-label>
+      <input matInput formControlName="environment" placeholder="Dev, Staging, Production" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Browser</mat-label>
+      <input matInput formControlName="browser" placeholder="Chrome 120" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Operating System</mat-label>
+      <input matInput formControlName="operatingSystem" placeholder="Windows 11" />
+    </mat-form-field>
+  </div>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Steps to Reproduce</mat-label>
+    <textarea matInput formControlName="stepsToReproduce" rows="4"></textarea>
+  </mat-form-field>
+
+  <div class="row">
+    <mat-form-field appearance="outline">
+      <mat-label>Expected Result</mat-label>
+      <textarea matInput formControlName="expectedResult" rows="3"></textarea>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Actual Result</mat-label>
+      <textarea matInput formControlName="actualResult" rows="3"></textarea>
+    </mat-form-field>
+  </div>
+
+  <div class="row">
+    <mat-form-field appearance="outline">
+      <mat-label>Developer</mat-label>
+      <mat-select formControlName="developerId">
+        <mat-option [value]="null">Unassigned</mat-option>
+        @for (m of members; track m.userId) {
+          <mat-option [value]="m.userId">{{ m.fullName }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Tester</mat-label>
+      <mat-select formControlName="testerId">
+        <mat-option [value]="null">Unassigned</mat-option>
+        @for (m of members; track m.userId) {
+          <mat-option [value]="m.userId">{{ m.fullName }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="actions">
+    <button mat-flat-button color="primary" type="submit" [disabled]="loading">
+      {{ isEdit ? 'Save Changes' : 'Report Bug' }}
+    </button>
+  </div>
+</form>

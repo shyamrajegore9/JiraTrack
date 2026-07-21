@@ -1,0 +1,19 @@
+.add-member {
+  margin-bottom: 24px;
+  padding: 16px;
+
+  h3 {
+    margin: 0 0 16px;
+  }
+}
+
+.add-form {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.members-table {
+  width: 100%;
+}

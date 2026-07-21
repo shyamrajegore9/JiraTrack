@@ -1,0 +1,6 @@
+@JiraTrack_HostAddress = http://localhost:5005
+
+GET {{JiraTrack_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

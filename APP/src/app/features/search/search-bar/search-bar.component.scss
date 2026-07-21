@@ -1,0 +1,38 @@
+.search-field {
+  width: 320px;
+  margin: 0 4px;
+
+  ::ng-deep .mat-mdc-text-field-wrapper {
+    background: var(--jt-surface-muted);
+    border-radius: var(--jt-radius-sm);
+  }
+
+  ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+  }
+
+  input {
+    color: var(--jt-text);
+    font-size: 0.875rem;
+  }
+
+  mat-icon {
+    color: var(--jt-text-muted);
+  }
+
+  ::ng-deep .mdc-notched-outline__leading,
+  ::ng-deep .mdc-notched-outline__notch,
+  ::ng-deep .mdc-notched-outline__trailing {
+    border-color: var(--jt-border) !important;
+  }
+
+  &:hover ::ng-deep .mat-mdc-text-field-wrapper {
+    background: var(--jt-surface);
+  }
+}
+
+@media (max-width: 768px) {
+  .search-field {
+    width: 160px;
+  }
+}

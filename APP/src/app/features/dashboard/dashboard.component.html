@@ -1,0 +1,141 @@
+<div class="dashboard">
+  <div class="header">
+    <div>
+      <h1>Welcome, {{ user()?.firstName }}!</h1>
+      <p class="subtitle">Your project management dashboard</p>
+    </div>
+    <a mat-stroked-button routerLink="/app/projects">
+      <mat-icon>folder</mat-icon>
+      View Projects
+    </a>
+  </div>
+
+  @if (loading()) {
+    <div class="loading"><mat-spinner diameter="40" /></div>
+  } @else if (summary(); as s) {
+    <div class="cards">
+      <mat-card class="stat-card tasks">
+        <div class="stat-icon"><mat-icon>assignment</mat-icon></div>
+        <h3>Open Tasks</h3>
+        <p class="metric">{{ s.openTasks }}</p>
+      </mat-card>
+      <mat-card class="stat-card bugs">
+        <div class="stat-icon"><mat-icon>bug_report</mat-icon></div>
+        <h3>Open Bugs</h3>
+        <p class="metric">{{ s.openBugs }}</p>
+      </mat-card>
+      <mat-card class="stat-card sprint">
+        <div class="stat-icon"><mat-icon>speed</mat-icon></div>
+        <h3>Sprint Progress</h3>
+        <p class="metric">{{ s.sprintProgressPercent }}%</p>
+      </mat-card>
+      <mat-card class="stat-card completed">
+        <div class="stat-icon"><mat-icon>check_circle</mat-icon></div>
+        <h3>Completed This Week</h3>
+        <p class="metric">{{ s.completedThisWeek }}</p>
+      </mat-card>
+      @if (isAdmin) {
+        <mat-card class="stat-card projects">
+          <div class="stat-icon"><mat-icon>folder_open</mat-icon></div>
+          <h3>Active Projects</h3>
+          <p class="metric">{{ s.activeProjects }}</p>
+        </mat-card>
+      }
+    </div>
+
+    <div class="grid-two">
+      <mat-card class="widget">
+        <div class="widget-header">
+          <h2>My Assigned Tasks</h2>
+          <a mat-button routerLink="/app/projects">View All</a>
+        </div>
+        @if (!myTasks().length) {
+          <p class="empty">No open tasks assigned to you.</p>
+        } @else {
+          <ul class="task-list">
+            @for (task of myTasks(); track task.id) {
+              <li>
+                <a [routerLink]="taskRoute(task)" class="task-link">
+                  <span class="task-key">{{ task.taskKey }}</span>
+                  <span class="task-title">{{ task.title }}</span>
+                  <mat-chip-set>
+                    <mat-chip [class]="priorityClass(task.priority)">{{ task.status }}</mat-chip>
+                  </mat-chip-set>
+                </a>
+              </li>
+            }
+          </ul>
+        }
+      </mat-card>
+
+      <mat-card class="widget">
+        <div class="widget-header">
+          <h2>Recent Activity</h2>
+        </div>
+        @if (!activity().length) {
+          <p class="empty">No recent activity.</p>
+        } @else {
+          <ul class="activity-list">
+            @for (item of activity(); track item.createdDate + item.message) {
+              <li>
+                @if (activityRoute(item); as route) {
+                  <a [routerLink]="route">{{ item.message }}</a>
+                } @else {
+                  <span>{{ item.message }}</span>
+                }
+                <span class="time">{{ item.createdDate | date:'short' }}</span>
+              </li>
+            }
+          </ul>
+        }
+      </mat-card>
+    </div>
+
+    <div class="grid-two">
+      <mat-card class="widget">
+        <h2>Tasks by Status</h2>
+        @if (!s.tasksByStatus.length) {
+          <p class="empty">No task data.</p>
+        } @else {
+          <div class="chart">
+            @for (slice of s.tasksByStatus; track slice.label) {
+              <div class="chart-row">
+                <span class="chart-label">{{ slice.label }}</span>
+                <div class="chart-bar-track">
+                  <div class="chart-bar" [style.width.%]="barWidth(slice, s.tasksByStatus)"></div>
+                </div>
+                <span class="chart-value">{{ slice.value }}</span>
+              </div>
+            }
+          </div>
+        }
+      </mat-card>
+
+      <mat-card class="widget">
+        <h2>Bugs by Severity</h2>
+        @if (bugSummary(); as bugs) {
+          <div class="bug-stats">
+            <span>Open: <strong>{{ bugs.open }}</strong></span>
+            <span>Closed: <strong>{{ bugs.closed }}</strong></span>
+            <span>Total: <strong>{{ bugs.total }}</strong></span>
+          </div>
+          @if (!bugs.bySeverity.length) {
+            <p class="empty">No open bugs.</p>
+          } @else {
+            <div class="chart">
+              @for (slice of bugs.bySeverity; track slice.label) {
+                <div class="chart-row">
+                  <span class="chart-label">{{ slice.label }}</span>
+                  <div class="chart-bar-track severity">
+                    <div class="chart-bar" [class]="slice.label.toLowerCase()" [style.width.%]="barWidth(slice, bugs.bySeverity)"></div>
+                  </div>
+                  <span class="chart-value">{{ slice.value }}</span>
+                </div>
+              }
+            </div>
+          }
+        }
+      </mat-card>
+    </div>
+  }
+</div>

@@ -1,0 +1,34 @@
+<h2 mat-dialog-title>Audit Log #{{ log.id }}</h2>
+
+<mat-dialog-content>
+  <dl class="detail-grid">
+    <dt>Entity</dt>
+    <dd>{{ log.entityType }} #{{ log.entityId }}</dd>
+
+    <dt>Action</dt>
+    <dd><span class="action-badge" [attr.data-action]="log.action">{{ log.action }}</span></dd>
+
+    <dt>User</dt>
+    <dd>{{ log.userName || 'System' }}@if (log.userId) { (ID {{ log.userId }}) }</dd>
+
+    <dt>IP Address</dt>
+    <dd>{{ log.ipAddress || '—' }}</dd>
+
+    <dt>Timestamp</dt>
+    <dd>{{ log.timestamp | date:'medium' }}</dd>
+  </dl>
+
+  <div class="json-section">
+    <h3>Old Values</h3>
+    <pre>{{ formatJson(log.oldValues) }}</pre>
+  </div>
+
+  <div class="json-section">
+    <h3>New Values</h3>
+    <pre>{{ formatJson(log.newValues) }}</pre>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>

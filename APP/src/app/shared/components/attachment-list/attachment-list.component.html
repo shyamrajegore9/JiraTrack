@@ -1,0 +1,39 @@
+@if (loading()) {
+  <div class="loading"><mat-spinner diameter="32"></mat-spinner></div>
+} @else {
+  @if (canWrite()) {
+    <app-file-upload [disabled]="uploading()" (fileSelected)="onFileSelected($event)" />
+  }
+
+  @if (attachments().length) {
+    <ul class="attachment-list">
+      @for (item of attachments(); track item.id) {
+        <li class="attachment-item">
+          @if (isImage(item) && previewUrls()[item.id]) {
+            <img [src]="previewUrls()[item.id]" [alt]="item.fileName" class="thumb" />
+          } @else {
+            <div class="file-icon">
+              <mat-icon>{{ isImage(item) ? 'image' : isVideo(item) ? 'videocam' : 'description' }}</mat-icon>
+            </div>
+          }
+          <div class="meta">
+            <strong>{{ item.fileName }}</strong>
+            <span>{{ formatFileSize(item.fileSize) }} · {{ item.uploadedByName }} · {{ item.uploadedDate | date:'short' }}</span>
+          </div>
+          <div class="actions">
+            <button mat-icon-button (click)="download(item)" aria-label="Download">
+              <mat-icon>download</mat-icon>
+            </button>
+            @if (canWrite() && canDelete(item)) {
+              <button mat-icon-button color="warn" (click)="deleteAttachment(item)" aria-label="Delete">
+                <mat-icon>delete</mat-icon>
+              </button>
+            }
+          </div>
+        </li>
+      }
+    </ul>
+  } @else if (!canWrite()) {
+    <p class="empty">No attachments</p>
+  }
+}

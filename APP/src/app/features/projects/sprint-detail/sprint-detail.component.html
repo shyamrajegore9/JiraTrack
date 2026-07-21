@@ -1,0 +1,128 @@
+@if (loading()) {
+  <div class="loading"><mat-spinner diameter="40"></mat-spinner></div>
+} @else if (sprint(); as s) {
+  <div class="sprint-header">
+    <div>
+      <h1>{{ s.name }}</h1>
+      @if (s.goal) { <p class="goal">{{ s.goal }}</p> }
+      <div class="meta">
+        <mat-chip [style.background]="statusColors[s.status]">{{ statusLabels[s.status] ?? s.status }}</mat-chip>
+        <span>{{ s.startDate ? (s.startDate | date:'mediumDate') : 'No start' }} → {{ s.endDate ? (s.endDate | date:'mediumDate') : 'No end' }}</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      @if (canManage && s.status === 'Planning') {
+        <button mat-flat-button color="primary" (click)="startSprint()"><mat-icon>play_arrow</mat-icon> Start Sprint</button>
+        <a mat-stroked-button [routerLink]="['edit']"><mat-icon>edit</mat-icon> Edit</a>
+      }
+      @if (canManage && s.status === 'Active') {
+        <button mat-stroked-button color="warn" (click)="closeSprint()"><mat-icon>stop</mat-icon> Close Sprint</button>
+      }
+      <a mat-button [routerLink]="['..']">Back to list</a>
+    </div>
+  </div>
+
+  @if (velocity(); as v) {
+    <div class="metrics">
+      <mat-card>
+        <mat-card-content>
+          <span class="metric-label">Velocity</span>
+          <span class="metric-value">{{ v.completedStoryPoints }} / {{ v.totalStoryPoints }} pts</span>
+        </mat-card-content>
+      </mat-card>
+      <mat-card>
+        <mat-card-content>
+          <span class="metric-label">Tasks Done</span>
+          <span class="metric-value">{{ v.completedTasks }} / {{ v.totalTasks }}</span>
+        </mat-card-content>
+      </mat-card>
+      <mat-card>
+        <mat-card-content>
+          <span class="metric-label">Completion</span>
+          <span class="metric-value">{{ v.completionRate }}%</span>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  }
+
+  @if (burndown(); as b) {
+    <mat-card class="burndown-card">
+      <mat-card-header><mat-card-title>Burndown Chart</mat-card-title></mat-card-header>
+      <mat-card-content>
+        @if (b.points.length) {
+          <div class="burndown-chart">
+            @for (point of b.points; track point.date) {
+              <div class="burndown-day">
+                <div class="bars">
+                  <div class="bar ideal" [style.height.%]="(point.idealRemaining / burndownMax()) * 100" [title]="'Ideal: ' + point.idealRemaining"></div>
+                  <div class="bar actual" [style.height.%]="(point.actualRemaining / burndownMax()) * 100" [title]="'Actual: ' + point.actualRemaining"></div>
+                </div>
+                <span class="day-label">{{ point.date | date:'MMM d' }}</span>
+              </div>
+            }
+          </div>
+          <div class="legend">
+            <span><i class="ideal"></i> Ideal</span>
+            <span><i class="actual"></i> Actual</span>
+          </div>
+        } @else {
+          <p class="empty">Add tasks with story points to see burndown data.</p>
+        }
+      </mat-card-content>
+    </mat-card>
+  }
+
+  <mat-card class="backlog-card">
+    <mat-card-header><mat-card-title>Sprint Backlog ({{ s.backlog.length }})</mat-card-title></mat-card-header>
+    <mat-card-content>
+      @if (canManage && s.status === 'Planning') {
+        <form [formGroup]="addForm" class="add-form" (ngSubmit)="addTask()">
+          <mat-form-field appearance="outline">
+            <mat-label>Add task</mat-label>
+            <mat-select formControlName="taskId">
+              @for (t of availableTasks(); track t.id) {
+                <mat-option [value]="t.id">{{ t.taskKey }} — {{ t.title }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <button mat-stroked-button type="submit">Add</button>
+        </form>
+      }
+
+      <table mat-table [dataSource]="s.backlog" class="backlog-table">
+        <ng-container matColumnDef="taskKey">
+          <th mat-header-cell *matHeaderCellDef>Key</th>
+          <td mat-cell *matCellDef="let t">
+            <a [routerLink]="['/app/projects', projectId, 'tasks', t.id]">{{ t.taskKey }}</a>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef>Title</th>
+          <td mat-cell *matCellDef="let t">{{ t.title }}</td>
+        </ng-container>
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let t">{{ t.status }}</td>
+        </ng-container>
+        <ng-container matColumnDef="assigneeName">
+          <th mat-header-cell *matHeaderCellDef>Assignee</th>
+          <td mat-cell *matCellDef="let t">{{ t.assigneeName ?? 'Unassigned' }}</td>
+        </ng-container>
+        <ng-container matColumnDef="storyPoints">
+          <th mat-header-cell *matHeaderCellDef>Pts</th>
+          <td mat-cell *matCellDef="let t">{{ t.storyPoints ?? '—' }}</td>
+        </ng-container>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let t">
+            @if (canManage && s.status === 'Planning') {
+              <button mat-icon-button (click)="removeTask(t.id)"><mat-icon>close</mat-icon></button>
+            }
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="backlogColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: backlogColumns"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+}

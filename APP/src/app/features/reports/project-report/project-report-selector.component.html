@@ -1,0 +1,20 @@
+<a routerLink="/app/reports" class="back-link"><mat-icon>arrow_back</mat-icon> Reports</a>
+
+<div class="page-header">
+  <div>
+    <h1>Project Report</h1>
+    <p>Select a project to view health metrics</p>
+  </div>
+</div>
+
+<form class="filters" [formGroup]="form" (ngSubmit)="viewReport()">
+  <mat-form-field appearance="outline">
+    <mat-label>Project</mat-label>
+    <mat-select formControlName="projectId" required>
+      @for (p of projects(); track p.id) {
+        <mat-option [value]="p.id">{{ p.key }} — {{ p.name }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+  <button mat-flat-button color="primary" type="submit">View Report</button>
+</form>

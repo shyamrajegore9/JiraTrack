@@ -1,0 +1,42 @@
+<mat-sidenav-container class="layout-container">
+  <mat-sidenav mode="side" [opened]="sidenavOpened" class="sidenav">
+    <div class="sidenav-brand">
+      <mat-icon>track_changes</mat-icon>
+      <span>JiraTrack</span>
+    </div>
+    <mat-nav-list>
+      @for (item of visibleNavItems(); track item.route) {
+        <a mat-list-item [routerLink]="item.route" routerLinkActive="active">
+          <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+          <span matListItemTitle>{{ item.label }}</span>
+        </a>
+      }
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="main-content">
+    <mat-toolbar class="toolbar">
+      <span class="spacer"></span>
+      <app-search-bar />
+      <app-notification-panel />
+      <button mat-button class="user-btn" [matMenuTriggerFor]="userMenu">
+        <mat-icon>account_circle</mat-icon>
+        {{ user()?.firstName }} {{ user()?.lastName }}
+      </button>
+      <mat-menu #userMenu="matMenu">
+        <button mat-menu-item routerLink="/app/profile">
+          <mat-icon>person</mat-icon>
+          Profile
+        </button>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          Logout
+        </button>
+      </mat-menu>
+    </mat-toolbar>
+
+    <main class="content">
+      <router-outlet />
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

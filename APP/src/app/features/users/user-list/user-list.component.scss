@@ -1,0 +1,10 @@
+// Page layout inherited from global styles (_global.scss)
+.user-table {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .filters mat-form-field {
+    width: 100%;
+  }
+}

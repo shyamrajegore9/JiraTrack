@@ -1,0 +1,53 @@
+@if (canManage) {
+  <mat-card class="add-member">
+    <h3>Add Member</h3>
+    <form [formGroup]="addForm" (ngSubmit)="addMember()" class="add-form">
+      <mat-form-field appearance="outline">
+        <mat-label>User</mat-label>
+        <mat-select formControlName="userId">
+          @for (user of users(); track user.id) {
+            <mat-option [value]="user.id">{{ user.fullName }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Role</mat-label>
+        <mat-select formControlName="projectRole">
+          @for (role of projectRoles; track role) {
+            <mat-option [value]="role">{{ role }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <button mat-flat-button color="primary" type="submit">Add</button>
+    </form>
+  </mat-card>
+}
+
+<table mat-table [dataSource]="members()" class="members-table">
+  <ng-container matColumnDef="fullName">
+    <th mat-header-cell *matHeaderCellDef>Name</th>
+    <td mat-cell *matCellDef="let m">{{ m.fullName }}</td>
+  </ng-container>
+  <ng-container matColumnDef="email">
+    <th mat-header-cell *matHeaderCellDef>Email</th>
+    <td mat-cell *matCellDef="let m">{{ m.email }}</td>
+  </ng-container>
+  <ng-container matColumnDef="projectRole">
+    <th mat-header-cell *matHeaderCellDef>Role</th>
+    <td mat-cell *matCellDef="let m">{{ m.projectRole }}</td>
+  </ng-container>
+  <ng-container matColumnDef="joinedDate">
+    <th mat-header-cell *matHeaderCellDef>Joined</th>
+    <td mat-cell *matCellDef="let m">{{ m.joinedDate | date:'mediumDate' }}</td>
+  </ng-container>
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let m">
+      @if (canManage) {
+        <button mat-icon-button color="warn" (click)="removeMember(m)"><mat-icon>person_remove</mat-icon></button>
+      }
+    </td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>

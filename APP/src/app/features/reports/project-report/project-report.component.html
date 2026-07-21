@@ -1,0 +1,44 @@
+<a routerLink="/app/reports/project" class="back-link"><mat-icon>arrow_back</mat-icon> Project Reports</a>
+
+@if (loading()) {
+  <div class="loading"><mat-spinner diameter="36" /></div>
+} @else if (report(); as r) {
+  <div class="page-header">
+    <div>
+      <h1>{{ r.projectName }}</h1>
+      <p>{{ r.projectKey }} · {{ r.memberCount }} members · Sprint: {{ r.hasActiveSprint ? r.activeSprintName : 'None' }}</p>
+    </div>
+  </div>
+
+  <div class="summary-grid">
+    <div class="summary-item"><div class="value">{{ r.openTasks }}/{{ r.totalTasks }}</div><div class="label">Open Tasks</div></div>
+    <div class="summary-item"><div class="value">{{ r.taskCompletionRate }}%</div><div class="label">Task Completion</div></div>
+    <div class="summary-item"><div class="value">{{ r.openBugs }}/{{ r.totalBugs }}</div><div class="label">Open Bugs</div></div>
+  </div>
+
+  @if (r.tasksByStatus.length) {
+    <div class="chart-section">
+      <h3>Tasks by Status</h3>
+      @for (slice of r.tasksByStatus; track slice.label) {
+        <div class="chart-row">
+          <span>{{ slice.label }}</span>
+          <div class="chart-bar-track"><div class="chart-bar" [style.width.%]="barWidth(slice, r.tasksByStatus)"></div></div>
+          <span>{{ slice.value }}</span>
+        </div>
+      }
+    </div>
+  }
+
+  @if (r.bugsBySeverity.length) {
+    <div class="chart-section">
+      <h3>Open Bugs by Severity</h3>
+      @for (slice of r.bugsBySeverity; track slice.label) {
+        <div class="chart-row">
+          <span>{{ slice.label }}</span>
+          <div class="chart-bar-track"><div class="chart-bar" [style.width.%]="barWidth(slice, r.bugsBySeverity)"></div></div>
+          <span>{{ slice.value }}</span>
+        </div>
+      }
+    </div>
+  }
+}

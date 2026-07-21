@@ -1,0 +1,16 @@
+<div class="page-header">
+  <div>
+    <h1>Reports</h1>
+    <p>Generate and export project reports</p>
+  </div>
+</div>
+
+<div class="report-cards">
+  @for (report of reports; track report.route) {
+    <a mat-card class="report-card" [routerLink]="report.route">
+      <mat-icon>{{ report.icon }}</mat-icon>
+      <h3>{{ report.title }}</h3>
+      <p>{{ report.desc }}</p>
+    </a>
+  }
+</div>

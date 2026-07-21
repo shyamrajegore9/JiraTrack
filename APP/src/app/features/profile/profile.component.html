@@ -1,0 +1,50 @@
+<h1>Profile</h1>
+
+<mat-tab-group>
+  <mat-tab label="Details">
+    <mat-card>
+      <app-profile-picture-upload
+        [profilePictureUrl]="profilePictureUrl()"
+        (uploaded)="onPictureUploaded($event)" />
+      <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="form">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>First Name</mat-label>
+          <input matInput formControlName="firstName" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Last Name</mat-label>
+          <input matInput formControlName="lastName" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Phone</mat-label>
+          <input matInput formControlName="phoneNumber" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Timezone</mat-label>
+          <input matInput formControlName="timeZone" />
+        </mat-form-field>
+        <button mat-flat-button color="primary" type="submit">Save Profile</button>
+      </form>
+    </mat-card>
+  </mat-tab>
+
+  <mat-tab label="Change Password">
+    <mat-card>
+      <form [formGroup]="passwordForm" (ngSubmit)="changePassword()" class="form">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Current Password</mat-label>
+          <input matInput type="password" formControlName="currentPassword" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>New Password</mat-label>
+          <input matInput type="password" formControlName="newPassword" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Confirm Password</mat-label>
+          <input matInput type="password" formControlName="confirmPassword" />
+        </mat-form-field>
+        <button mat-flat-button color="primary" type="submit">Change Password</button>
+      </form>
+    </mat-card>
+  </mat-tab>
+</mat-tab-group>

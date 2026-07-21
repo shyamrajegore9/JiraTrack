@@ -1,0 +1,70 @@
+<div class="comment-item" [style.margin-left.px]="depth() * 20">
+  <div class="comment-header">
+    <strong>{{ comment().fullName }}</strong>
+    <span class="meta">@{{ comment().userName }} · {{ comment().createdDate | date:'medium' }}</span>
+    @if (comment().isEdited) { <span class="edited">(edited)</span> }
+  </div>
+
+  @if (editing()) {
+    <form [formGroup]="editForm" class="comment-form" (ngSubmit)="saveEdit()">
+      <mat-form-field appearance="outline" class="full-width">
+        <textarea matInput formControlName="content" rows="3"></textarea>
+      </mat-form-field>
+      <div class="form-actions">
+        <button mat-stroked-button type="button" (click)="editing.set(false)">Cancel</button>
+        <button mat-flat-button color="primary" type="submit">Save</button>
+      </div>
+    </form>
+  } @else {
+    <p class="comment-content">{{ comment().content }}</p>
+    @if (comment().mentions.length) {
+      <div class="mentions">
+        @for (m of comment().mentions; track m.userId) {
+          <span class="mention">@{{ m.userName }}</span>
+        }
+      </div>
+    }
+  }
+
+  <div class="comment-actions">
+    @if (canWrite()) {
+      @for (emoji of reactionEmojis; track emoji) {
+        <button mat-button class="reaction-btn" [class.active]="comment().reactions.find(r => r.emoji === emoji)?.reactedByMe" (click)="toggleReaction(emoji)">
+          {{ emoji }}
+          @if (comment().reactions.find(r => r.emoji === emoji); as r) {
+            <span>{{ r.count }}</span>
+          }
+        </button>
+      }
+    }
+    @if (canReply()) {
+      <button mat-button (click)="replying.set(!replying())"><mat-icon>reply</mat-icon> Reply</button>
+    }
+    @if (comment().canEdit && !editing()) {
+      <button mat-button (click)="startEdit()"><mat-icon>edit</mat-icon></button>
+    }
+    @if (comment().canDelete) {
+      <button mat-button color="warn" (click)="deleteComment()"><mat-icon>delete</mat-icon></button>
+    }
+  </div>
+
+  @if (replying()) {
+    <form [formGroup]="replyForm" class="comment-form reply-form" (ngSubmit)="submitReply()">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Reply</mat-label>
+        <textarea matInput formControlName="content" rows="2" placeholder="Use @username to mention"></textarea>
+      </mat-form-field>
+      <button mat-stroked-button type="submit">Post Reply</button>
+    </form>
+  }
+
+  @for (reply of comment().replies; track reply.id) {
+    <app-comment-item
+      [comment]="reply"
+      [entityType]="entityType()"
+      [entityId]="entityId()"
+      [canWrite]="canWrite()"
+      [depth]="depth() + 1"
+      (changed)="changed.emit()" />
+  }
+</div>

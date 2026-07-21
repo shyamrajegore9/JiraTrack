@@ -1,0 +1,35 @@
+<h1>{{ isEdit ? 'Edit Project' : 'Create Project' }}</h1>
+
+<form [formGroup]="form" (ngSubmit)="submit()" class="project-form">
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Project Key</mat-label>
+    <input matInput formControlName="key" (input)="onKeyInput($event)" placeholder="e.g. PROJ" [readonly]="isEdit" />
+    <mat-hint>2-10 uppercase letters/numbers</mat-hint>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Project Name</mat-label>
+    <input matInput formControlName="name" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Description</mat-label>
+    <textarea matInput rows="4" formControlName="description"></textarea>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Project Lead</mat-label>
+    <mat-select formControlName="leadUserId">
+      @for (user of users; track user.id) {
+        <mat-option [value]="user.id">{{ user.fullName }} ({{ user.email }})</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <div class="actions">
+    <button mat-button type="button" routerLink="/app/projects">Cancel</button>
+    <button mat-flat-button color="primary" type="submit" [disabled]="loading">
+      {{ isEdit ? 'Update' : 'Create' }}
+    </button>
+  </div>
+</form>

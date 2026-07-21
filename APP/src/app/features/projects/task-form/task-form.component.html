@@ -1,0 +1,92 @@
+<div class="form-header">
+  <h1>{{ isEdit ? 'Edit Task' : 'New Task' }}</h1>
+  <a mat-button [routerLink]="isEdit ? ['..'] : ['..']">Cancel</a>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="submit()" class="task-form">
+  <mat-form-field appearance="outline">
+    <mat-label>Title</mat-label>
+    <input matInput formControlName="title" />
+    @if (form.controls.title.touched && form.controls.title.invalid) {
+      <mat-error>Title is required</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Description</mat-label>
+    <textarea matInput formControlName="description" rows="4"></textarea>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Acceptance Criteria</mat-label>
+    <textarea matInput formControlName="acceptanceCriteria" rows="3"></textarea>
+  </mat-form-field>
+
+  <div class="row">
+    @if (!isEdit) {
+      <mat-form-field appearance="outline">
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status">
+          @for (s of statuses; track s) {
+            <mat-option [value]="s">{{ statusLabels[s] }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    }
+    <mat-form-field appearance="outline">
+      <mat-label>Priority</mat-label>
+      <mat-select formControlName="priority">
+        @for (p of priorities; track p) {
+          <mat-option [value]="p">{{ p }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Assignee</mat-label>
+      <mat-select formControlName="assigneeId">
+        <mat-option [value]="null">Unassigned</mat-option>
+        @for (m of members; track m.userId) {
+          <mat-option [value]="m.userId">{{ m.fullName }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="row">
+    <mat-form-field appearance="outline">
+      <mat-label>Story Points</mat-label>
+      <input matInput type="number" formControlName="storyPoints" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Estimated Hours</mat-label>
+      <input matInput type="number" formControlName="estimatedHours" />
+    </mat-form-field>
+    @if (isEdit) {
+      <mat-form-field appearance="outline">
+        <mat-label>Actual Hours</mat-label>
+        <input matInput type="number" formControlName="actualHours" />
+      </mat-form-field>
+    }
+  </div>
+
+  <div class="row">
+    <mat-form-field appearance="outline">
+      <mat-label>Start Date</mat-label>
+      <input matInput [matDatepicker]="startPicker" formControlName="startDate" />
+      <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+      <mat-datepicker #startPicker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Due Date</mat-label>
+      <input matInput [matDatepicker]="duePicker" formControlName="dueDate" />
+      <mat-datepicker-toggle matIconSuffix [for]="duePicker"></mat-datepicker-toggle>
+      <mat-datepicker #duePicker></mat-datepicker>
+    </mat-form-field>
+  </div>
+
+  <div class="actions">
+    <button mat-flat-button color="primary" type="submit" [disabled]="loading">
+      {{ isEdit ? 'Save Changes' : 'Create Task' }}
+    </button>
+  </div>
+</form>

@@ -1,0 +1,89 @@
+<div class="page-header">
+  <div>
+    <h1>Kanban Board</h1>
+    <p>Drag cards between columns to update task status</p>
+  </div>
+  @if (connected()) {
+    <span class="live-indicator"><mat-icon>circle</mat-icon> Live</span>
+  }
+</div>
+
+<form [formGroup]="filterForm" class="filters" (ngSubmit)="loadBoard()">
+  <mat-form-field appearance="outline">
+    <mat-label>Assignee</mat-label>
+    <mat-select formControlName="assigneeId">
+      <mat-option [value]="null">All</mat-option>
+      @for (m of members(); track m.userId) {
+        <mat-option [value]="m.userId">{{ m.fullName }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Label</mat-label>
+    <mat-select formControlName="labelId">
+      <mat-option [value]="null">All</mat-option>
+      @for (l of labels(); track l.id) {
+        <mat-option [value]="l.id">{{ l.name }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Sprint</mat-label>
+    <mat-select formControlName="sprintId">
+      <mat-option [value]="null">All</mat-option>
+      @for (s of sprints(); track s.id) {
+        <mat-option [value]="s.id">{{ s.name }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+  <button mat-stroked-button type="submit">Apply</button>
+</form>
+
+@if (loading()) {
+  <div class="loading"><mat-spinner diameter="40"></mat-spinner></div>
+} @else if (board(); as b) {
+  <div class="kanban-board" cdkDropListGroup>
+    @for (column of b.columns; track column.status) {
+      <div class="kanban-column">
+        <div class="column-header">
+          <h3>{{ column.title }}</h3>
+          <span class="count">{{ column.count }}</span>
+        </div>
+        <div
+          class="column-cards"
+          cdkDropList
+          [cdkDropListData]="column.cards"
+          [id]="'column-' + column.status"
+          [cdkDropListConnectedTo]="columnIds(b.columns)"
+          (cdkDropListDropped)="drop($event, column)"
+          [cdkDropListDisabled]="!canWrite">
+          @for (card of column.cards; track card.id) {
+            <mat-card class="kanban-card" cdkDrag [cdkDragDisabled]="!canWrite">
+              <div class="card-key">
+                <a [routerLink]="['/app/projects', projectId, 'tasks', card.id]">{{ card.taskKey }}</a>
+              </div>
+              <div class="card-title">{{ card.title }}</div>
+              <div class="card-meta">
+                <mat-chip [style.background]="priorityColors[card.priority]">{{ card.priority }}</mat-chip>
+                @if (card.storyPoints) {
+                  <span class="points">{{ card.storyPoints }} pts</span>
+                }
+              </div>
+              @if (card.labels.length) {
+                <div class="card-labels">
+                  @for (label of card.labels; track label) {
+                    <mat-chip>{{ label }}</mat-chip>
+                  }
+                </div>
+              }
+              <div class="card-assignee">
+                <mat-icon>person</mat-icon>
+                {{ card.assigneeName ?? 'Unassigned' }}
+              </div>
+            </mat-card>
+          }
+        </div>
+      </div>
+    }
+  </div>
+}

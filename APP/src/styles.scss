@@ -1,0 +1,62 @@
+@use '@angular/material' as mat;
+@use './styles/tokens';
+@use './styles/global';
+
+html {
+  height: 100%;
+
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$blue-palette,
+        tertiary: mat.$cyan-palette,
+      ),
+      typography: (
+        brand-family: Inter,
+        plain-family: Inter,
+        bold-weight: 700,
+        medium-weight: 600,
+        regular-weight: 400,
+      ),
+      density: 0,
+    )
+  );
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  color-scheme: light;
+  background-color: var(--jt-content-bg);
+  color: var(--jt-text);
+  font-family: var(--jt-font);
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+  height: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--jt-text);
+}
+
+a {
+  color: var(--jt-primary);
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: var(--jt-primary-dark);
+  }
+}
+
+.full-width {
+  width: 100%;
+}

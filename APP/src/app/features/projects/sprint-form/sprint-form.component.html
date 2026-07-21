@@ -1,0 +1,40 @@
+<div class="form-header">
+  <h1>{{ isEdit ? 'Edit Sprint' : 'New Sprint' }}</h1>
+  <a mat-button routerLink="..">Cancel</a>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="submit()" class="sprint-form">
+  <mat-form-field appearance="outline">
+    <mat-label>Sprint Name</mat-label>
+    <input matInput formControlName="name" placeholder="Sprint 1" />
+    @if (form.controls.name.touched && form.controls.name.invalid) {
+      <mat-error>Name is required</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Goal</mat-label>
+    <textarea matInput formControlName="goal" rows="2" placeholder="Sprint goal..."></textarea>
+  </mat-form-field>
+
+  <div class="row">
+    <mat-form-field appearance="outline">
+      <mat-label>Start Date</mat-label>
+      <input matInput [matDatepicker]="startPicker" formControlName="startDate" />
+      <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+      <mat-datepicker #startPicker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>End Date</mat-label>
+      <input matInput [matDatepicker]="endPicker" formControlName="endDate" />
+      <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
+      <mat-datepicker #endPicker></mat-datepicker>
+    </mat-form-field>
+  </div>
+
+  <div class="actions">
+    <button mat-flat-button color="primary" type="submit" [disabled]="loading">
+      {{ isEdit ? 'Save Changes' : 'Create Sprint' }}
+    </button>
+  </div>
+</form>

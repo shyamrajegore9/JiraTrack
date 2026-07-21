@@ -1,0 +1,24 @@
+.comment-thread {
+  h3 {
+    margin: 0 0 16px;
+  }
+}
+
+.add-form {
+  margin-bottom: 24px;
+
+  .full-width {
+    width: 100%;
+  }
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: 24px;
+}
+
+.empty {
+  color: rgba(0, 0, 0, 0.5);
+  margin: 0;
+}

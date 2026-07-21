@@ -1,0 +1,70 @@
+<div class="page-header">
+  <div>
+    <h1>Search</h1>
+    <p>Find projects, tasks, and bugs across JiraTrack</p>
+  </div>
+</div>
+
+<form class="search-form" [formGroup]="searchForm" (ngSubmit)="runSearch(1)">
+  <mat-form-field appearance="outline" class="query-field">
+    <mat-label>Search</mat-label>
+    <input matInput formControlName="q" placeholder="Enter at least 2 characters..." />
+    <mat-icon matPrefix>search</mat-icon>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Type</mat-label>
+    <mat-select formControlName="scope">
+      <mat-option value="all">All</mat-option>
+      <mat-option value="projects">Projects</mat-option>
+      <mat-option value="tasks">Tasks</mat-option>
+      <mat-option value="bugs">Bugs</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <button mat-flat-button color="primary" type="submit">Search</button>
+</form>
+
+@if (recentSearches().length) {
+  <div class="recent">
+    <span class="recent-label">Recent:</span>
+    <mat-chip-set>
+      @for (term of recentSearches(); track term) {
+        <mat-chip (click)="applyRecent(term)">{{ term }}</mat-chip>
+      }
+    </mat-chip-set>
+  </div>
+}
+
+@if (loading()) {
+  <div class="loading"><mat-spinner diameter="36" /></div>
+} @else if (searchForm.value.q && searchForm.value.q.length >= 2) {
+  <p class="result-count">{{ totalCount() }} result(s) found</p>
+
+  @if (!results().length) {
+    <p class="empty">No results for "{{ searchForm.value.q }}"</p>
+  } @else {
+    <ul class="results">
+      @for (item of results(); track item.type + item.id) {
+        <li>
+          <a [routerLink]="resultLink(item)" class="result-item">
+            <mat-chip class="type-badge">{{ item.type }}</mat-chip>
+            <span class="result-key" [innerHTML]="highlightHtml(item.key)"></span>
+            <span class="result-title" [innerHTML]="highlightHtml(item.title)"></span>
+            @if (item.status) {
+              <span class="result-status">{{ item.status }}</span>
+            }
+            @if (item.subtitle) {
+              <span class="result-sub">{{ item.subtitle }}</span>
+            }
+          </a>
+        </li>
+      }
+    </ul>
+
+    <mat-paginator
+      [length]="totalCount()"
+      [pageIndex]="pageNumber() - 1"
+      [pageSize]="pageSize()"
+      [pageSizeOptions]="[10, 20, 50]"
+      (page)="onPage($event)" />
+  }
+}

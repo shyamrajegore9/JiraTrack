@@ -1,0 +1,4 @@
+<mat-form-field appearance="outline" class="search-field" subscriptSizing="dynamic">
+  <mat-icon matPrefix>search</mat-icon>
+  <input matInput [formControl]="query" placeholder="Search..." (keydown.enter)="submit()" />
+</mat-form-field>

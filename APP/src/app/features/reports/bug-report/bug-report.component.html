@@ -1,0 +1,63 @@
+<a routerLink="/app/reports" class="back-link"><mat-icon>arrow_back</mat-icon> Reports</a>
+
+<div class="page-header">
+  <div>
+    <h1>Bug Report</h1>
+    <p>Bugs grouped by severity, status, and environment</p>
+  </div>
+</div>
+
+<form class="filters" [formGroup]="filterForm" (ngSubmit)="runReport()">
+  <mat-form-field appearance="outline">
+    <mat-label>Project</mat-label>
+    <mat-select formControlName="projectId">
+      <mat-option [value]="null">All projects</mat-option>
+      @for (p of projects(); track p.id) {
+        <mat-option [value]="p.id">{{ p.name }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Start date</mat-label>
+    <input matInput [matDatepicker]="startPicker" formControlName="startDate" />
+    <mat-datepicker-toggle matIconSuffix [for]="startPicker" />
+    <mat-datepicker #startPicker />
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>End date</mat-label>
+    <input matInput [matDatepicker]="endPicker" formControlName="endDate" />
+    <mat-datepicker-toggle matIconSuffix [for]="endPicker" />
+    <mat-datepicker #endPicker />
+  </mat-form-field>
+  <button mat-flat-button color="primary" type="submit">Run Report</button>
+</form>
+
+@if (report()) {
+  <div class="export-actions">
+    <button mat-stroked-button type="button" (click)="exportPdf()">Export PDF</button>
+    <button mat-stroked-button type="button" (click)="exportExcel()">Export Excel</button>
+  </div>
+}
+
+@if (loading()) {
+  <div class="loading"><mat-spinner diameter="36" /></div>
+} @else if (report(); as r) {
+  <div class="summary-grid">
+    <div class="summary-item"><div class="value">{{ r.totalBugs }}</div><div class="label">Total Bugs</div></div>
+  </div>
+
+  @for (section of [{ title: 'By Severity', data: r.bySeverity }, { title: 'By Status', data: r.byStatus }, { title: 'By Environment', data: r.byEnvironment }]; track section.title) {
+    @if (section.data.length) {
+      <div class="chart-section">
+        <h3>{{ section.title }}</h3>
+        @for (slice of section.data; track slice.label) {
+          <div class="chart-row">
+            <span>{{ slice.label }}</span>
+            <div class="chart-bar-track"><div class="chart-bar" [style.width.%]="barWidth(slice, section.data)"></div></div>
+            <span>{{ slice.value }}</span>
+          </div>
+        }
+      </div>
+    }
+  }
+}

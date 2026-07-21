@@ -1,0 +1,28 @@
+<a routerLink="/app/reports" class="back-link"><mat-icon>arrow_back</mat-icon> Reports</a>
+
+<div class="page-header">
+  <div>
+    <h1>Sprint Report</h1>
+    <p>Select a sprint to view velocity and burndown</p>
+  </div>
+</div>
+
+<form class="filters" [formGroup]="form" (ngSubmit)="viewReport()">
+  <mat-form-field appearance="outline">
+    <mat-label>Project</mat-label>
+    <mat-select formControlName="projectId" required>
+      @for (p of projects(); track p.id) {
+        <mat-option [value]="p.id">{{ p.name }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Sprint</mat-label>
+    <mat-select formControlName="sprintId" required>
+      @for (s of sprints(); track s.id) {
+        <mat-option [value]="s.id">{{ s.name }} ({{ s.status }})</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+  <button mat-flat-button color="primary" type="submit">View Report</button>
+</form>

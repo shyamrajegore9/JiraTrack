@@ -1,0 +1,102 @@
+@import '../../users/user-list/user-list.component.scss';
+
+.search-form {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.query-field {
+  flex: 1;
+  min-width: 240px;
+}
+
+.recent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+
+  .recent-label {
+    font-size: 13px;
+    color: rgba(0, 0, 0, 0.6);
+  }
+
+  mat-chip {
+    cursor: pointer;
+  }
+}
+
+.result-count {
+  color: rgba(0, 0, 0, 0.6);
+  margin: 0 0 12px;
+}
+
+.empty {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.results {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.result-item {
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  text-decoration: none;
+  color: inherit;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.02);
+  }
+}
+
+.type-badge {
+  font-size: 11px;
+  min-height: 24px;
+}
+
+.result-key {
+  font-weight: 600;
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.result-title {
+  font-size: 14px;
+}
+
+.result-status {
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.result-sub {
+  grid-column: 3 / -1;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+::ng-deep mark {
+  background: #fff59d;
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
+@media (max-width: 768px) {
+  .result-item {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}

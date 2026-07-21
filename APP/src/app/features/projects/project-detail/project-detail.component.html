@@ -1,0 +1,22 @@
+@if (project(); as p) {
+  <div class="project-header">
+    <div>
+      <span class="project-key">{{ p.key }}</span>
+      <h1>{{ p.name }}</h1>
+      @if (p.isArchived) {
+        <mat-chip class="archived">Archived</mat-chip>
+      }
+    </div>
+  </div>
+
+  <nav class="project-tabs">
+    @for (tab of tabs; track tab.route) {
+      <a [routerLink]="['/app/projects', projectId, tab.route]" routerLinkActive="active">
+        <mat-icon>{{ tab.icon }}</mat-icon>
+        {{ tab.label }}
+      </a>
+    }
+  </nav>
+}
+
+<router-outlet />

@@ -1,0 +1,156 @@
+@if (loading()) {
+  <div class="loading"><mat-spinner diameter="40"></mat-spinner></div>
+} @else if (task(); as t) {
+  <div class="task-header">
+    <div>
+      <span class="task-key">{{ t.taskKey }}</span>
+      <h1>{{ t.title }}</h1>
+      <div class="meta">
+        <mat-chip>{{ statusLabels[t.status] ?? t.status }}</mat-chip>
+        <mat-chip [style.background]="priorityColors[t.priority]">{{ t.priority }}</mat-chip>
+        @for (label of t.labelDetails; track label.id) {
+          <mat-chip [style.background]="label.color">{{ label.name }}</mat-chip>
+        }
+      </div>
+    </div>
+    <div class="header-actions">
+      @if (canWrite) {
+        <a mat-stroked-button [routerLink]="['edit']"><mat-icon>edit</mat-icon> Edit</a>
+      }
+      @if (canDelete) {
+        <button mat-stroked-button color="warn" (click)="deleteTask()"><mat-icon>delete</mat-icon> Delete</button>
+      }
+      <a mat-button [routerLink]="['..']">Back to list</a>
+    </div>
+  </div>
+
+  <div class="task-grid">
+    <mat-card class="detail-card">
+      <mat-card-header><mat-card-title>Details</mat-card-title></mat-card-header>
+      <mat-card-content>
+        @if (t.description) {
+          <section>
+            <h3>Description</h3>
+            <p>{{ t.description }}</p>
+          </section>
+        }
+        @if (t.acceptanceCriteria) {
+          <section>
+            <h3>Acceptance Criteria</h3>
+            <p>{{ t.acceptanceCriteria }}</p>
+          </section>
+        }
+        <dl class="info-list">
+          <div><dt>Reporter</dt><dd>{{ t.reporterName }}</dd></div>
+          <div><dt>Assignee</dt><dd>{{ t.assigneeName ?? 'Unassigned' }}</dd></div>
+          <div><dt>Story Points</dt><dd>{{ t.storyPoints ?? '—' }}</dd></div>
+          <div><dt>Estimated</dt><dd>{{ t.estimatedHours ?? '—' }} hrs</dd></div>
+          <div><dt>Actual</dt><dd>{{ t.actualHours }} hrs</dd></div>
+          <div><dt>Start</dt><dd>{{ t.startDate ? (t.startDate | date:'mediumDate') : '—' }}</dd></div>
+          <div><dt>Due</dt><dd>{{ t.dueDate ? (t.dueDate | date:'mediumDate') : '—' }}</dd></div>
+        </dl>
+      </mat-card-content>
+    </mat-card>
+
+    <div class="side-panel">
+      @if (canWrite) {
+        <mat-card>
+          <mat-card-header><mat-card-title>Status</mat-card-title></mat-card-header>
+          <mat-card-content>
+            <form [formGroup]="statusForm" class="status-form" (ngSubmit)="updateStatus()">
+              <mat-form-field appearance="outline">
+                <mat-label>Status</mat-label>
+                <mat-select formControlName="status">
+                  @for (s of statuses; track s) {
+                    <mat-option [value]="s">{{ statusLabels[s] }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+              <button mat-flat-button color="primary" type="submit">Update</button>
+            </form>
+          </mat-card-content>
+        </mat-card>
+      }
+
+      <mat-card>
+        <mat-card-header><mat-card-title>Checklist</mat-card-title></mat-card-header>
+        <mat-card-content>
+          @for (item of t.checklist; track item.id) {
+            <div class="checklist-item">
+              <mat-checkbox [checked]="item.isCompleted" [disabled]="!canWrite" (change)="toggleChecklistItem(item)">
+                {{ item.text }}
+              </mat-checkbox>
+              @if (canWrite) {
+                <button mat-icon-button (click)="deleteChecklistItem(item)"><mat-icon>close</mat-icon></button>
+              }
+            </div>
+          }
+          @if (canWrite) {
+            <form [formGroup]="checklistForm" class="checklist-form" (ngSubmit)="addChecklistItem()">
+              <mat-form-field appearance="outline">
+                <mat-label>New item</mat-label>
+                <input matInput formControlName="text" />
+              </mat-form-field>
+              <button mat-stroked-button type="submit">Add</button>
+            </form>
+          }
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card>
+        <mat-card-header><mat-card-title>Subtasks</mat-card-title></mat-card-header>
+        <mat-card-content>
+          @if (t.subtasks.length) {
+            <ul class="subtask-list">
+              @for (sub of t.subtasks; track sub.id) {
+                <li>
+                  <a [routerLink]="['..', sub.id]">{{ sub.taskKey }} — {{ sub.title }}</a>
+                </li>
+              }
+            </ul>
+          } @else {
+            <p class="empty">No subtasks</p>
+          }
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card>
+        <mat-card-header><mat-card-title>Attachments</mat-card-title></mat-card-header>
+        <mat-card-content>
+          <app-attachment-list entityType="Task" [entityId]="taskId" [canWrite]="canWrite" />
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card>
+        <mat-card-header><mat-card-title>Time Logs</mat-card-title></mat-card-header>
+        <mat-card-content>
+          @for (log of t.timeLogs; track log.id) {
+            <div class="time-log">
+              <strong>{{ log.hours }}h</strong> — {{ log.userName }} on {{ log.workDate | date:'mediumDate' }}
+              @if (log.description) { <span class="desc">{{ log.description }}</span> }
+            </div>
+          }
+          @if (canWrite) {
+            <form [formGroup]="timeLogForm" class="time-log-form" (ngSubmit)="addTimeLog()">
+              <mat-form-field appearance="outline">
+                <mat-label>Hours</mat-label>
+                <input matInput type="number" formControlName="hours" />
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Description</mat-label>
+                <input matInput formControlName="description" />
+              </mat-form-field>
+              <button mat-stroked-button type="submit">Log Time</button>
+            </form>
+          }
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <mat-card class="comments-card">
+    <mat-card-content>
+      <app-comment-thread entityType="Task" [entityId]="taskId" [canWrite]="canWrite" />
+    </mat-card-content>
+  </mat-card>
+}

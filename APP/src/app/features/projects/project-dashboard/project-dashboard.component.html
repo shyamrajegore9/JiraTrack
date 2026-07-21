@@ -1,0 +1,28 @@
+@if (dashboard(); as d) {
+  <div class="cards">
+    <mat-card>
+      <mat-icon>assignment</mat-icon>
+      <h3>Tasks</h3>
+      <p class="metric">{{ d.openTasks }} / {{ d.totalTasks }}</p>
+      <span class="label">Open / Total</span>
+    </mat-card>
+    <mat-card>
+      <mat-icon>bug_report</mat-icon>
+      <h3>Bugs</h3>
+      <p class="metric">{{ d.openBugs }} / {{ d.totalBugs }}</p>
+      <span class="label">Open / Total</span>
+    </mat-card>
+    <mat-card>
+      <mat-icon>group</mat-icon>
+      <h3>Members</h3>
+      <p class="metric">{{ d.memberCount }}</p>
+      <span class="label">Team size</span>
+    </mat-card>
+    <mat-card>
+      <mat-icon>speed</mat-icon>
+      <h3>Sprint</h3>
+      <p class="metric">{{ d.hasActiveSprint ? (d.activeSprintName ?? 'Active') : 'None' }}</p>
+      <span class="label">Current sprint</span>
+    </mat-card>
+  </div>
+}

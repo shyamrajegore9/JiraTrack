@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/API/">
+    <Project Path="API/JiraTrack.csproj" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="Tests/JiraTrack.Tests.csproj" />
+  </Folder>
+</Solution>

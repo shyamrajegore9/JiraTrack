@@ -1,0 +1,122 @@
+.layout-container {
+  height: 100vh;
+  background: var(--jt-content-bg);
+}
+
+.sidenav {
+  width: 260px;
+  background: var(--jt-sidebar-bg) !important;
+  border-right: 1px solid var(--jt-sidebar-border) !important;
+  color: var(--jt-sidebar-text);
+}
+
+.sidenav-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 24px 20px 20px;
+  border-bottom: 1px solid var(--jt-sidebar-border);
+  margin-bottom: 8px;
+
+  mat-icon {
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+    color: var(--jt-accent);
+  }
+
+  span {
+    font-size: 1.125rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #f8fafc;
+  }
+}
+
+mat-nav-list {
+  padding: 8px 12px !important;
+
+  a[mat-list-item] {
+    border-radius: var(--jt-radius-sm) !important;
+    margin-bottom: 4px;
+    color: var(--jt-sidebar-text) !important;
+    transition: background 0.15s ease, color 0.15s ease;
+
+    mat-icon {
+      color: var(--jt-sidebar-text) !important;
+    }
+
+    &:hover {
+      background: var(--jt-sidebar-hover) !important;
+      color: var(--jt-sidebar-text-active) !important;
+
+      mat-icon {
+        color: var(--jt-sidebar-text-active) !important;
+      }
+    }
+
+    &.active {
+      background: var(--jt-sidebar-active) !important;
+      color: var(--jt-sidebar-text-active) !important;
+      font-weight: 600;
+      box-shadow: inset 3px 0 0 var(--jt-primary);
+
+      mat-icon {
+        color: var(--jt-accent) !important;
+      }
+    }
+  }
+}
+
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--jt-toolbar-bg) !important;
+  color: var(--jt-text) !important;
+  border-bottom: 1px solid var(--jt-toolbar-border);
+  box-shadow: var(--jt-shadow-sm);
+  height: 64px;
+  padding: 0 24px;
+  gap: 8px;
+}
+
+.toolbar-title {
+  display: none;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.user-btn {
+  border-radius: var(--jt-radius-sm);
+  font-weight: 500;
+  color: var(--jt-text);
+
+  mat-icon {
+    margin-right: 4px;
+    color: var(--jt-text-secondary);
+  }
+}
+
+.content {
+  padding: 28px 32px;
+  max-width: 1440px;
+  margin: 0 auto;
+  min-height: calc(100vh - 64px);
+}
+
+@media (max-width: 768px) {
+  .sidenav {
+    width: 240px;
+  }
+
+  .content {
+    padding: 16px;
+  }
+
+  .toolbar {
+    padding: 0 12px;
+  }
+}

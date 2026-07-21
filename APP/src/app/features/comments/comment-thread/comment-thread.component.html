@@ -1,0 +1,28 @@
+<div class="comment-thread">
+  <h3>Comments ({{ comments().length }})</h3>
+
+  @if (canWrite()) {
+    <form [formGroup]="addForm" class="add-form" (ngSubmit)="addComment()">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Add a comment</mat-label>
+        <textarea matInput formControlName="content" rows="3" placeholder="Use @username to mention team members"></textarea>
+      </mat-form-field>
+      <button mat-flat-button color="primary" type="submit">Post Comment</button>
+    </form>
+  }
+
+  @if (loading()) {
+    <div class="loading"><mat-spinner diameter="32"></mat-spinner></div>
+  } @else if (!comments().length) {
+    <p class="empty">No comments yet. Be the first to comment.</p>
+  } @else {
+    @for (comment of comments(); track comment.id) {
+      <app-comment-item
+        [comment]="comment"
+        [entityType]="entityType()"
+        [entityId]="entityId()"
+        [canWrite]="canWrite()"
+        (changed)="loadComments()" />
+    }
+  }
+</div>

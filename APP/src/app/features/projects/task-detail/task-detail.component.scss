@@ -1,0 +1,129 @@
+@import '../../users/user-list/user-list.component.scss';
+
+.task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+
+  h1 {
+    margin: 8px 0;
+  }
+}
+
+.task-key {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.6);
+  font-weight: 600;
+}
+
+.meta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.task-grid {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 24px;
+
+  @media (max-width: 960px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.detail-card section {
+  margin-bottom: 16px;
+
+  h3 {
+    margin: 0 0 8px;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.6);
+  }
+
+  p {
+    margin: 0;
+    white-space: pre-wrap;
+  }
+}
+
+.info-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  margin: 16px 0 0;
+
+  div {
+    dt {
+      font-size: 12px;
+      color: rgba(0, 0, 0, 0.6);
+    }
+
+    dd {
+      margin: 4px 0 0;
+      font-weight: 500;
+    }
+  }
+}
+
+.side-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.status-form,
+.checklist-form,
+.time-log-form {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.checklist-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.subtask-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  a {
+    text-decoration: none;
+    color: var(--mat-sys-primary);
+  }
+}
+
+.time-log {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+
+  .desc {
+    display: block;
+    font-size: 13px;
+    color: rgba(0, 0, 0, 0.6);
+  }
+}
+
+.empty {
+  color: rgba(0, 0, 0, 0.5);
+  margin: 0;
+}
+
+.comments-card {
+  margin-top: 24px;
+}

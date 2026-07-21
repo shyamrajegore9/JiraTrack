@@ -1,0 +1,88 @@
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(37, 99, 235, 0.18), transparent),
+    radial-gradient(ellipse 60% 50% at 100% 100%, rgba(14, 165, 233, 0.12), transparent),
+    linear-gradient(160deg, #0f172a 0%, #1e293b 45%, #334155 100%);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 440px;
+  padding: 40px 36px 36px;
+  border-radius: var(--jt-radius-lg) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: var(--jt-shadow-lg) !important;
+  background: rgba(255, 255, 255, 0.98) !important;
+  backdrop-filter: blur(12px);
+  position: relative;
+  z-index: 1;
+}
+
+.brand {
+  text-align: center;
+  margin-bottom: 32px;
+
+  mat-icon {
+    font-size: 52px;
+    width: 52px;
+    height: 52px;
+    color: var(--jt-primary);
+    filter: drop-shadow(0 4px 8px rgba(37, 99, 235, 0.25));
+  }
+
+  h1 {
+    margin: 12px 0 6px;
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--jt-text);
+  }
+
+  p {
+    margin: 0;
+    color: var(--jt-text-secondary);
+    font-size: 0.9375rem;
+  }
+}
+
+.full-width {
+  width: 100%;
+}
+
+.submit-btn {
+  height: 48px;
+  margin-top: 12px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border-radius: var(--jt-radius-sm) !important;
+}
+
+.forgot-link {
+  display: block;
+  text-align: center;
+  margin-top: 20px;
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--jt-primary);
+
+  &:hover {
+    color: var(--jt-primary-dark);
+    text-decoration: underline;
+  }
+}

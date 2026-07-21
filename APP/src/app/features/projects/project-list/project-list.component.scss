@@ -1,0 +1,15 @@
+@import '../../users/user-list/user-list.component.scss';
+
+.project-table a {
+  text-decoration: none;
+  color: inherit;
+  font-weight: 500;
+
+  &:hover {
+    color: var(--mat-sys-primary);
+  }
+}
+
+mat-chip.archived {
+  background: #ffebee;
+}
